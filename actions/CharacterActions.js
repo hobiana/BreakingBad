@@ -4,6 +4,7 @@ export const CHARACTER_LIST = "CHARACTER_LIST";
 export const CHARACTER_DETAIL = "CHARACTER_DETAIL";
 export const CHARACTER_CLEAR = "CHARACTER_CLEAR";
 export const RANDOM_QUOTE = "RANDOM_QUOTE";
+export const ADD_COMMENT = "ADD_COMMENT";
 
 export const characterList = (characters) => ({
   type: CHARACTER_LIST,
@@ -20,6 +21,11 @@ export const randomQuote = (quote) => ({
   payload: quote,
 });
 
+export const addComment = (comment) => ({
+  type: ADD_COMMENT,
+  payload: comment,
+});
+
 export const clearCharacter = () => ({
   type: CHARACTER_CLEAR,
   payload: {},
@@ -33,7 +39,7 @@ export const charactersFetchData = (pageSize, page) => {
   };
 }
 
-export const randomQuoteFetchData = (pageSize, page) => {
+export const randomQuoteFetchData = () => {
   return (dispatch) => {
     getRandomQuote().then((response) => {
       dispatch(randomQuote(response[0]))
@@ -52,5 +58,11 @@ export const characterDetailFetchData = (idCharacter) => {
 export const clearCharacterFetchData = (idCharacter) => {
   return (dispatch) => {
     dispatch(clearCharacter())
+  };
+}
+
+export const addCommentData = (comment) => {
+  return (dispatch) => {
+    dispatch(addComment(comment))
   };
 }

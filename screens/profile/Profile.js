@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, Dimension
 import { Button, ListItem, Card } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux'
-import { characterDetailFetchData, clearCharacterFetchData, randomQuoteFetchData } from '../../actions/CharacterActions'
+import { characterDetailFetchData, clearCharacterFetchData, randomQuoteFetchData, addCommentData } from '../../actions/CharacterActions'
 
 function ProfileScreen(props) {
     const [comment, setComment] = useState('');
@@ -27,8 +27,22 @@ function ProfileScreen(props) {
         props.getNewRandomQuote();
     }
 
+    _handleAddcomment = () => {
+        let data = [{
+            char_id: props.route.params.idCharacter,
+            comment: comment
+        }]
+        if (comment) props.addComment(data)
+    }
+
+    getCommentsByCharacter = (idCharacter) => {
+        let comments = props.comments.filter(comment => comment.char_id == idCharacter)
+        return comments
+    }
+
     _displayCharacter = () => {
         let character = props.charactersDetail
+        let comments = getCommentsByCharacter(character.char_id)
         if (character != undefined && Object.keys(character).length !== 0) {
             return (
                 <>
@@ -109,14 +123,32 @@ function ProfileScreen(props) {
                             <Button
                                 style={styles.btn}
                                 icon={
-                                <Icon
-                                    name="arrow-right"
-                                    size={25}
-                                    color="gray"
-                                />
-                            }
+                                    <Icon
+                                        name="arrow-right"
+                                        size={25}
+                                        color="gray"
+                                    />
+                                }
                                 type="clear"
+                                onPress={_handleAddcomment}
                             />
+                        </View>
+                        <View style={styles.comment_list}>
+                            <Text style={styles.comment_text}>Comments</Text>
+                            {
+                                comments.map((data, index) => {
+                                    return (
+                                        <Card key={index}>
+                                            <ListItem>
+                                                <ListItem.Content>
+                                                    <ListItem.Subtitle>{data.comment}</ListItem.Subtitle>
+                                                </ListItem.Content>
+                                            </ListItem>
+                                        </Card>
+                                    )
+                                })
+                            }
+
                         </View>
                     </ScrollView>
                 </>
@@ -193,6 +225,12 @@ const styles = StyleSheet.create({
         color: '#000',
         textAlign: 'center'
     },
+    comment_text: {
+        fontWeight: 'bold',
+        fontSize: 25,
+        color: '#000',
+        textAlign: 'center'
+    },
     default_text: {
         alignItems: 'stretch',
         fontSize: 15,
@@ -224,6 +262,9 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 'auto',
         alignItems: 'center'
+    },
+    comment_list: {
+        marginBottom: 25
     }
 })
 
@@ -231,7 +272,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
     return {
         charactersDetail: state.character,
-        randomQuote: state.quote
+        randomQuote: state.quote,
+        comments: state.comments
     }
 }
 
@@ -242,7 +284,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(randomQuoteFetchData())
         },
         getNewRandomQuote: () => dispatch(randomQuoteFetchData()),
-        clearCharacter: () => dispatch(clearCharacterFetchData())
+        clearCharacter: () => dispatch(clearCharacterFetchData()),
+        addComment: (comment) => dispatch(addCommentData(comment))
     }
 }
 

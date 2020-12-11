@@ -1,9 +1,10 @@
-import { CHARACTER_LIST, CHARACTER_DETAIL, CHARACTER_CLEAR, RANDOM_QUOTE } from "../../actions/CharacterActions"
+import { CHARACTER_LIST, CHARACTER_DETAIL, CHARACTER_CLEAR, RANDOM_QUOTE, ADD_COMMENT } from "../../actions/CharacterActions"
 
 const initialState = {
   characters: [],
   character: {},
-  quote: {}
+  quote: {},
+  comments: []
 }
 
 export const characterReducer = (state = initialState, action) => {
@@ -19,6 +20,9 @@ export const characterReducer = (state = initialState, action) => {
     }
     case RANDOM_QUOTE: {
       return {...state, quote: action.payload}
+    }
+    case ADD_COMMENT: {
+      return {...state, comments: [...state.comments, ...action.payload]}
     }
     default:
       return state
