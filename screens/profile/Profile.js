@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, Dimensions, TextInput } from 'react-native';
 import { Button, ListItem, Card } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux'
 import { characterDetailFetchData, clearCharacterFetchData, randomQuoteFetchData } from '../../actions/CharacterActions'
 
 function ProfileScreen(props) {
-    const [isLoading, setIsLoading] = useState(true);
+    const [comment, setComment] = useState('');
 
     _loadCharacter = (id) => {
         props.fetchData(id)
@@ -42,20 +42,6 @@ function ProfileScreen(props) {
                         </View>
                         <View style={styles.description}>
                             <Text style={styles.title_text}>{character.name}</Text>
-                            {/* <View style={styles.quote_container}>
-                            <Text style={styles.quote_text}>" {props.randomQuote.quote} "</Text>
-                            <Button
-                                onPress={_handleChangeQuote}
-                                icon={
-                                    <Icon
-                                        name="refresh"
-                                        size={15}
-                                        color="gray"
-                                    />
-                                }
-                                type="clear"
-                            />
-                        </View> */}
                             <Card>
                                 <Card.Title style={{ paddingBottom: 0 }}>Characters's description</Card.Title>
                                 <Card.Divider />
@@ -110,6 +96,27 @@ function ProfileScreen(props) {
                                     </ListItem.Content>
                                 </ListItem>
                             </Card>
+                        </View>
+                        <View style={styles.comment_container}>
+                            <TextInput
+                                style={styles.input}
+                                editable
+                                numberOfLines={2}
+                                onChangeText={(text) => setComment(text)}
+                                value={comment}
+                                placeholder={'Insert comment'}
+                            />
+                            <Button
+                                style={styles.btn}
+                                icon={
+                                <Icon
+                                    name="arrow-right"
+                                    size={25}
+                                    color="gray"
+                                />
+                            }
+                                type="clear"
+                            />
                         </View>
                     </ScrollView>
                 </>
@@ -170,7 +177,6 @@ const styles = StyleSheet.create({
     },
     description: {
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
         flexDirection: 'column',
         padding: 15,
         flex: 1,
@@ -201,15 +207,23 @@ const styles = StyleSheet.create({
     quote_container: {
         backgroundColor: '#F6F6F6',
         padding: 5,
-        // shadowColor: '#000',
-        // shadowOffset: {
-        //     width: 0,
-        //     height: 4,
-        // },
-        // borderRadius: 5,
-        // shadowOpacity: 0.30,
-        // shadowRadius: 4.65,
         elevation: 3,
+    },
+    comment_container: {
+        padding: 15,
+        flexDirection: 'row'
+    },
+    input: {
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 5,
+        flex: 3
+    },
+    btn: {
+        flex: 1,
+        height: 'auto',
+        alignItems: 'center'
     }
 })
 
